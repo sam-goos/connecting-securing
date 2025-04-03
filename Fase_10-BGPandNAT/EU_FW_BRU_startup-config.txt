@@ -1,0 +1,147 @@
+!
+version 15.1
+service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname EU_FW_BRU
+!
+!
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+!
+!
+aaa new-model
+!
+aaa authentication login default local 
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524JCM6-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name allsafe.com
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description Link to R_PROVIDER
+ ip address 193.190.124.209 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ description Link to EU_CoreSW1
+ ip address 172.16.1.13 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ description Link to EU_CoreSW2
+ ip address 172.16.1.17 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ mac-address 0001.c7cd.9701
+ no ip address
+ ip nat inside
+!
+interface Vlan20
+ mac-address 0001.c7cd.9702
+ no ip address
+ ip nat inside
+!
+interface Vlan100
+ mac-address 0001.c7cd.9703
+ no ip address
+ ip nat inside
+!
+interface Vlan200
+ mac-address 0001.c7cd.9704
+ no ip address
+ ip nat inside
+!
+router ospf 10
+ log-adjacency-changes
+ network 172.16.1.13 0.0.0.0 area 0
+ network 172.16.1.17 0.0.0.0 area 0
+ network 193.190.124.209 0.0.0.0 area 0
+!
+router bgp 65300
+ bgp log-neighbor-changes
+ no synchronization
+ neighbor 193.190.124.210 remote-as 65200
+ network 10.3.0.0 mask 255.255.0.0
+!
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+ip nat inside source static 10.3.200.19 193.190.124.9 
+ip classless
+!
+ip flow-export version 9
+!
+!
+access-list 1 permit 10.3.10.0 0.0.1.255
+access-list 1 permit 10.3.20.0 0.0.1.255
+access-list 1 permit 10.3.100.0 0.0.0.31
+!
+banner motd #Authorised Access Only!#
+!
+!
+!
+!
+logging 10.3.200.18
+line con 0
+ password 7 0822455D0A16
+!
+line aux 0
+!
+line vty 0 4
+ password 7 0822455D0A16
+ transport input ssh
+!
+!
+ntp server 10.3.200.18
+!
+end
+
