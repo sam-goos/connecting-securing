@@ -1,0 +1,167 @@
+conf t
+!
+version 12.4
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+!
+hostname US_Roas_CHI
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+!
+!
+aaa session-id common
+memory-size iomem 5
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+no ip dhcp use vrf connected
+ip dhcp excluded-address 10.2.10.10
+!
+ip dhcp pool CHI_VLAN10
+   network 10.2.10.0 255.255.255.192
+   default-router 10.2.10.1
+   domain-name allsafe.com
+   lease 3
+!
+ip dhcp pool CHI_VLAN20
+   network 10.2.20.0 255.255.255.192
+   default-router 10.2.20.1
+   domain-name allsafe.com
+   lease 3
+!
+!
+no ip domain lookup
+ip domain name allsafe.com
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+ip tcp synwait-time 5
+ip ssh version 2
+!
+!
+!
+!
+interface FastEthernet0/0
+ description Link to LAN
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.10
+ description Default Gateway for VLAN 10
+ encapsulation dot1Q 10
+ ip address 10.2.10.1 255.255.255.0
+!
+interface FastEthernet0/0.20
+ description Default Gateway for VLAN 20
+ encapsulation dot1Q 20
+ ip address 10.2.20.1 255.255.255.0
+ ip helper-address 10.2.10.1
+!
+interface FastEthernet0/0.100
+ description Default Gateway for VLAN 100
+ encapsulation dot1Q 100
+ ip address 10.2.100.1 255.255.255.224
+!
+interface FastEthernet0/0.200
+ description Default Gateway for VLAN 200
+ encapsulation dot1Q 200
+ ip address 10.2.200.1 255.255.255.224
+!
+interface FastEthernet0/1
+ description Link to US_Roas_NY
+ ip address 172.16.1.9 255.255.255.252
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 172.16.1.5
+ip route 10.1.0.0 255.255.0.0 172.16.1.10
+!
+!
+no ip http server
+no ip http secure-server
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CCAuthorised Access Only!^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ password cisco
+ transport input ssh
+!
+!
+end
+!
+wr
+!

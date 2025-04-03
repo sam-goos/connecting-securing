@@ -1,0 +1,145 @@
+enable
+!
+configure terminal
+!
+version 15.0
+no service timestamps debug uptime
+no service timestamps log uptime
+service password-encryption
+service compress-config
+!
+hostname EU_AccessSW1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+username admin secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+no aaa new-model
+!
+!
+!
+!
+!
+vtp domain CISCO-vIOS
+vtp mode transparent
+!
+!
+!
+ip domain-name allsafe.com
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name DATA
+!
+vlan 20
+ name WIRELESS
+!
+vlan 100
+ name MGMT
+!
+vlan 200
+ name SERVERS
+!
+ip ssh time-out 12
+ip ssh version 2
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description UPLINK
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,100,200
+ switchport mode trunk
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description UPLINK_FAiLOVER
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,100,200
+ switchport mode trunk
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ media-type rj45
+ negotiation auto
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0
+ shutdown
+ media-type rj45
+ negotiation auto
+ spanning-tree portfast
+!
+interface GigabitEthernet1/1
+ shutdown
+ media-type rj45
+ negotiation auto
+ spanning-tree portfast
+!
+interface Vlan100
+ ip address 10.3.100.13 255.255.255.224
+!
+ip default-gateway 10.3.100.1
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CAuthorised Access Only!^C
+!
+line con 0
+ password 7 0822455D0A16
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 0822455D0A16
+ logging synchronous
+ login
+ transport input ssh
+line vty 5 15
+ password 7 0822455D0A16
+ logging synchronous
+ login
+ transport input ssh
+!
+!
+end
+
+
+wr
+!

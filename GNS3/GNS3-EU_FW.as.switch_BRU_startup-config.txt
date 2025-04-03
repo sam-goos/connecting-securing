@@ -1,0 +1,267 @@
+enable
+!
+conf t
+!
+version 12.4
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+!
+hostname EU_FW_BRU
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+!
+!
+aaa session-id common
+memory-size iomem 5
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name allsafe.com
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+ip tcp synwait-time 5
+ip ssh version 2
+!
+!
+!
+!
+interface FastEthernet0/0
+ description Link to US_FW_NY
+ ip address 172.16.1.21 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ description Link to EU_CoreSW2
+ ip address 172.16.1.17 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ description Link to EU_CoreSW1
+ ip address 172.16.1.13 255.255.255.252
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+ip route 10.3.10.0 255.255.254.0 172.16.1.14
+ip route 10.3.20.0 255.255.254.0 172.16.1.14
+ip route 10.3.100.0 255.255.255.224 172.16.1.14
+ip route 10.3.200.0 255.255.254.0 172.16.1.14
+ip route 10.3.200.0 255.255.255.224 172.16.1.14
+!
+!
+no ip http server
+no ip http secure-server
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CCCAuthorised Access Only!^C
+
+EU_FW_BRU(config)#ip classless
+EU_FW_BRU(config)#ip route 10.1.0.0 255.255.0.0 172.16.1.22
+EU_FW_BRU(config)#ip route 10.2.0.0 255.255.0.0 172.16.1.22
+EU_FW_BRU(config)#ip route 10.3.0.0 255.255.0.0 172.16.1.14
+EU_FW_BRU(config)#ip route 10.3.0.0 255.255.0.0 172.16.1.18 200
+EU_FW_BRU(config)#ip route 0.0.0.0 0.0.0.0 172.16.1.22
+EU_FW_BRU(config)#do wr
+Building configuration...
+[OK]
+EU_FW_BRU(config)#do show run
+Building configuration...
+
+Current configuration : 1870 bytes
+!
+version 12.4
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+!
+hostname EU_FW_BRU
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+!
+!
+aaa session-id common
+memory-size iomem 5
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name allsafe.com
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+ip tcp synwait-time 5
+ip ssh version 2
+!
+!
+!
+!
+interface FastEthernet0/0
+ description Link to US_FW_NY
+ ip address 172.16.1.21 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ description Link to EU_CoreSW2
+ ip address 172.16.1.17 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ description Link to EU_CoreSW1
+ ip address 172.16.1.13 255.255.255.252
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 172.16.1.22
+ip route 10.1.0.0 255.255.0.0 172.16.1.22
+ip route 10.2.0.0 255.255.0.0 172.16.1.22
+ip route 10.3.0.0 255.255.0.0 172.16.1.14
+ip route 10.3.0.0 255.255.0.0 172.16.1.18 200
+ip route 10.3.10.0 255.255.254.0 172.16.1.14
+ip route 10.3.20.0 255.255.254.0 172.16.1.14
+ip route 10.3.100.0 255.255.255.224 172.16.1.14
+ip route 10.3.200.0 255.255.254.0 172.16.1.14
+ip route 10.3.200.0 255.255.255.224 172.16.1.14
+!
+!
+no ip http server
+no ip http secure-server
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CCCAuthorised Access Only!^C
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ password cisco
+ transport input ssh
+!
+!
+end
+!
+wr
+!
