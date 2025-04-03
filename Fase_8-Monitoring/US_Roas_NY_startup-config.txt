@@ -1,0 +1,177 @@
+!
+version 15.1
+service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname US_Roas_NY
+!
+!
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+ip dhcp excluded-address 10.1.10.10
+ip dhcp excluded-address 10.1.10.1
+!
+ip dhcp pool NY
+ network 10.1.10.0 255.255.255.0
+ default-router 10.1.10.1
+!
+!
+aaa new-model
+!
+aaa authentication login default local 
+!
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+license udi pid CISCO2911/K9 sn FTX15245S9B-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name allsafe.com
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description Link to LAN
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ description Default Gateway for VLAN 10
+ encapsulation dot1Q 10
+ ip address 10.1.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ description Default Gateway for VLAN 20
+ encapsulation dot1Q 20
+ ip address 10.1.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0.100
+ description Default Gateway for VLAN 100
+ encapsulation dot1Q 100
+ ip address 10.1.100.1 255.255.255.224
+!
+interface GigabitEthernet0/0.200
+ description Default Gateway for VLAN 200
+ encapsulation dot1Q 200
+ ip address 10.1.200.1 255.255.255.224
+!
+interface GigabitEthernet0/1
+ description Link to US_Roas_CHI
+ ip address 172.16.1.10 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ description Link to US_FW_NY
+ ip address 172.16.1.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf priority 1
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0/0
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/0/1
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/0/2
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/0/3
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/1/0
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/1/1
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/1/2
+ description Link to LAN
+ switchport mode access
+ shutdown
+!
+interface FastEthernet0/1/3
+ switchport mode access
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 10
+ log-adjacency-changes
+ passive-interface GigabitEthernet0/0
+ network 172.16.1.2 0.0.0.0 area 0
+ network 172.16.1.10 0.0.0.0 area 0
+ network 10.1.10.1 0.0.0.0 area 0
+ network 10.1.20.1 0.0.0.0 area 0
+ network 10.1.100.1 0.0.0.0 area 0
+ network 10.1.200.1 0.0.0.0 area 0
+!
+router rip
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+!
+banner motd #Authorised Access Only!#
+!
+!
+!
+!
+logging 10.3.200.18
+line con 0
+ password 7 0822455D0A16
+!
+line aux 0
+!
+line vty 0 4
+ password 7 0822455D0A16
+ transport input ssh
+!
+!
+ntp server 10.3.200.18
+!
+end
+
