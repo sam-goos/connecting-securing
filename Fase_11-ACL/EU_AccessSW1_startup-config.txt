@@ -1,0 +1,258 @@
+!
+version 15.0
+service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname EU_AccessSW1
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+!
+ip ssh version 2
+ip ssh time-out 12
+ip domain-name allsafe.com
+!
+username admin secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+!
+ip dhcp snooping vlan 10,200
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ description TO EU_CoreSW1_Fa0/5
+ switchport trunk allowed vlan 10,20,100,200
+ switchport mode trunk
+!
+interface FastEthernet0/2
+ description TO EU_CoreSW2_Fa0/4
+ switchport trunk allowed vlan 10,20,100,200
+ switchport mode trunk
+!
+interface FastEthernet0/3
+ description TO BRU_PC01
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 0004.9A56.74D7
+!
+interface FastEthernet0/4
+ description TO Zabbix_Server
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/5
+ description TO DHCP_Server
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/6
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 0001.4351.D01A
+!
+interface FastEthernet0/8
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/10
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/11
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/12
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/13
+ switchport access vlan 100
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 0004.9A46.0D65
+ switchport port-security mac-address sticky 00E0.F725.1E62
+!
+interface FastEthernet0/14
+ switchport access vlan 100
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 100
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 100
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 100
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 200
+ ip dhcp snooping trust
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 0001.9743.DCB8
+!
+interface FastEthernet0/19
+ switchport access vlan 200
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 000A.4186.442D
+!
+interface FastEthernet0/20
+ switchport access vlan 200
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/21
+ switchport access vlan 200
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 200
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/23
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface FastEthernet0/24
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface GigabitEthernet0/1
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface GigabitEthernet0/2
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan100
+ ip address 10.3.100.12 255.255.255.224
+!
+ip default-gateway 10.3.100.5
+!
+banner motd #Authorised Access Only!#
+logging 10.3.200.18
+!
+!
+!
+ip access-list extended REMOTE_ACCESS
+ permit tcp host 10.3.100.30 any eq 22
+ permit tcp host 10.3.100.30 any eq telnet
+ deny ip any any
+line con 0
+ password 7 0822455D0A16
+ login
+!
+line vty 0 4
+ access-class REMOTE_ACCESS in
+ password 7 0822455D0A16
+ login local
+ transport input ssh
+line vty 5 15
+ password 7 0822455D0A16
+ login
+ transport input ssh
+!
+!
+!
+ntp server 10.3.200.18
+!
+end
+
