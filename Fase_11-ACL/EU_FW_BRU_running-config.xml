@@ -3,7 +3,7 @@
   <mgt-config>
     <users>
       <entry name="admin">
-        <phash>$1$bsueydxg$ryFFbidzlvl3a0WkXt1be1</phash>
+        <phash>$5$svhyondb$MvqLmCeDK6Exb2I9Cavsy5Xrr6A0pbKmWcJL0VRflf3</phash>
         <permissions>
           <role-based>
             <superuser>yes</superuser>
@@ -106,13 +106,15 @@
                   <enable>no</enable>
                 </sdwan-link-settings>
                 <ip>
-                  <entry name="195.13.1.221"/>
+                  <entry name="193.190.124.209/30"/>
                 </ip>
                 <lldp>
                   <enable>no</enable>
                 </lldp>
+                <interface-management-profile>allow ping</interface-management-profile>
               </layer3>
               <comment>Link to R_PROVIDER</comment>
+              <link-state>auto</link-state>
             </entry>
             <entry name="ethernet1/2">
               <layer3>
@@ -127,11 +129,12 @@
                   <enable>no</enable>
                 </sdwan-link-settings>
                 <ip>
-                  <entry name="172.16.1.13"/>
+                  <entry name="172.16.1.13/30"/>
                 </ip>
                 <lldp>
                   <enable>no</enable>
                 </lldp>
+                <interface-management-profile>allow ping</interface-management-profile>
               </layer3>
               <comment>Link to EU_CoreSW1</comment>
             </entry>
@@ -148,11 +151,12 @@
                   <enable>no</enable>
                 </sdwan-link-settings>
                 <ip>
-                  <entry name="172.16.1.17"/>
+                  <entry name="172.16.1.17/30"/>
                 </ip>
                 <lldp>
                   <enable>no</enable>
                 </lldp>
+                <interface-management-profile>allow ping</interface-management-profile>
               </layer3>
               <comment>Link to EU_CoreSW2</comment>
             </entry>
@@ -166,6 +170,24 @@
               <action>wait-recover</action>
             </entry>
           </monitor-profile>
+          <interface-management-profile>
+            <entry name="allow ping">
+              <https>yes</https>
+              <ssh>yes</ssh>
+              <ping>yes</ping>
+              <permitted-ip>
+                <entry name="0.0.0.0/0"/>
+              </permitted-ip>
+              <http>yes</http>
+              <http-ocsp>yes</http-ocsp>
+              <snmp>yes</snmp>
+              <userid-service>yes</userid-service>
+              <userid-syslog-listener-ssl>yes</userid-syslog-listener-ssl>
+              <userid-syslog-listener-udp>yes</userid-syslog-listener-udp>
+              <response-pages>yes</response-pages>
+              <telnet>yes</telnet>
+            </entry>
+          </interface-management-profile>
         </profiles>
         <ike>
           <crypto-profiles>
@@ -346,7 +368,7 @@
                       <entry name="172.16.1.17/30">
                         <advertise/>
                       </entry>
-                      <entry name="195.13.1.221/30">
+                      <entry name="193.190.124.209/30">
                         <advertise/>
                       </entry>
                     </range>
@@ -365,7 +387,7 @@
                         <retransmit-interval>5</retransmit-interval>
                         <transit-delay>1</transit-delay>
                         <link-type>
-                          <broadcast/>
+                          <p2p/>
                         </link-type>
                       </entry>
                       <entry name="ethernet1/3">
@@ -382,7 +404,7 @@
                         <retransmit-interval>5</retransmit-interval>
                         <transit-delay>1</transit-delay>
                         <link-type>
-                          <broadcast/>
+                          <p2p/>
                         </link-type>
                       </entry>
                       <entry name="ethernet1/1">
@@ -399,13 +421,13 @@
                         <retransmit-interval>5</retransmit-interval>
                         <transit-delay>1</transit-delay>
                         <link-type>
-                          <broadcast/>
+                          <p2p/>
                         </link-type>
                       </entry>
                     </interface>
                   </entry>
                 </area>
-                <enable>yes</enable>
+                <enable>no</enable>
                 <router-id>1.1.1.1</router-id>
               </ospf>
               <ospfv3>
@@ -422,6 +444,77 @@
                 <ip-modulo/>
               </algorithm>
             </ecmp>
+            <routing-table>
+              <ip>
+                <static-route>
+                  <entry name="New York">
+                    <nexthop>
+                      <ip-address>193.190.124.209</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <metric>10</metric>
+                    <destination>10.1.0.0/16</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="Chicago">
+                    <nexthop>
+                      <ip-address>193.190.124.209</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <metric>10</metric>
+                    <destination>10.2.0.0/16</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="Brussel">
+                    <nexthop>
+                      <ip-address>172.16.1.14</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <metric>10</metric>
+                    <destination>10.3.0.0/16</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="Brussel-HSRP">
+                    <nexthop>
+                      <ip-address>172.16.1.18</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <metric>200</metric>
+                    <destination>10.3.0.0/16</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="Last Resort">
+                    <nexthop>
+                      <ip-address>193.190.124.209</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <metric>10</metric>
+                    <destination>0.0.0.0/0</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                </static-route>
+              </ip>
+            </routing-table>
           </entry>
         </virtual-router>
         <dhcp>
@@ -481,6 +574,18 @@
               <enable>yes</enable>
             </entry>
           </log-export-schedule>
+          <permitted-ip>
+            <entry name="0.0.0.0/0"/>
+          </permitted-ip>
+          <motd-and-banner>
+            <motd-enable>yes</motd-enable>
+            <message>This device belongs to AllSafe.com. No unauthorised access!</message>
+            <motd-color>color1</motd-color>
+            <severity>info</severity>
+            <banner-header>WARNING</banner-header>
+            <banner-header-color>color4</banner-header-color>
+            <banner-header-text-color>color14</banner-header-text-color>
+          </motd-and-banner>
         </system>
         <setting>
           <config>
@@ -576,10 +681,150 @@
               </network>
             </entry>
           </zone>
-          <service/>
+          <service>
+            <entry name="SSH">
+              <protocol>
+                <tcp>
+                  <port>22</port>
+                  <override>
+                    <no/>
+                  </override>
+                </tcp>
+              </protocol>
+              <description>SSH</description>
+            </entry>
+            <entry name="Telnet">
+              <protocol>
+                <tcp>
+                  <port>23</port>
+                  <override>
+                    <no/>
+                  </override>
+                </tcp>
+              </protocol>
+              <description>Telnet</description>
+            </entry>
+          </service>
           <service-group/>
           <schedule/>
-          <rulebase/>
+          <rulebase>
+            <security>
+              <rules>
+                <entry name="REMOTE_ACCESS" uuid="2a3ac980-c5a6-4fb2-9de1-d14a121bfe65">
+                  <to>
+                    <member>LAN</member>
+                  </to>
+                  <from>
+                    <member>LAN</member>
+                  </from>
+                  <source>
+                    <member>10.3.100.30</member>
+                  </source>
+                  <destination>
+                    <member>172.16.1.13</member>
+                    <member>172.16.1.17</member>
+                    <member>193.190.124.209</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>SSH</member>
+                    <member>Telnet</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <description>only allows SSH/Telnet access from the bru-MGMT PC (10.3.100.30)</description>
+                </entry>
+                <entry name="Block-REMOTE_ACCESS" uuid="48d8f91b-46f4-4dd0-ac80-84dbceea6d8e">
+                  <to>
+                    <member>any</member>
+                  </to>
+                  <from>
+                    <member>any</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>172.16.1.13</member>
+                    <member>172.16.1.17</member>
+                    <member>193.190.124.209</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>SSH</member>
+                    <member>Telnet</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>deny</action>
+                  <description>block all other SSH/Telnet connections to the PA FW interfaces</description>
+                </entry>
+                <entry name="No_Inter-VLAN10" uuid="97c0604c-62d8-4605-885d-7f35b15fbae5">
+                  <to>
+                    <member>any</member>
+                  </to>
+                  <from>
+                    <member>any</member>
+                  </from>
+                  <source>
+                    <member>10.1.10.0/24</member>
+                    <member>10.2.10.0/26</member>
+                    <member>10.3.10.0/23</member>
+                  </source>
+                  <destination>
+                    <member>10.1.10.0/24</member>
+                    <member>10.2.10.0/26</member>
+                    <member>10.3.10.0/23</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>deny</action>
+                  <description>no data is allowed to pass between data VLANs (VLAN 10)</description>
+                </entry>
+              </rules>
+            </security>
+          </rulebase>
           <address>
             <entry name="195.13.1.221">
               <ip-netmask>195.13.1.221/30</ip-netmask>
