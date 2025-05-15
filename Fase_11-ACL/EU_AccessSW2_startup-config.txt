@@ -18,6 +18,7 @@ username admin secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
 !
 !
 ip dhcp snooping vlan 10
+ip dhcp snooping
 !
 spanning-tree mode rapid-pvst
 spanning-tree portfast bpduguard default
